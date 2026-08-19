@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy::input::mouse::MouseMotion;
 use bevy::window::{CursorGrabMode, CursorOptions, PrimaryWindow};
 
+use crate::AppState;
 use crate::player::Player;
 
 pub struct CameraPlugin;
@@ -13,7 +14,8 @@ impl Plugin for CameraPlugin {
             camera_look, 
             camera_movement, 
             lock_cursor_on_click,
-            unlock_cursor_esc
+            unlock_cursor_esc,
+            camera_focus_player.run_if(in_state(AppState::InGame))
         ));
     }
 }
@@ -106,9 +108,14 @@ pub fn camera_movement(
     }
 }
 
-pub fn camera_focus_player(mut camera_query: Query<&mut Transform, With<FpsCamera>>, player_query: Query<&Transform, With<Player>>) {
-    // TODO
+pub fn camera_focus_player(mut camera_query: Query<&mut Transform, With<FpsCamera>>, player_query: Query<&Transform, (With<Player>, Without<FpsCamera>)>) {
     // Hier immer das looking at der Kamera auf den Spieler machen und ihn verfolgen
+    let Ok(player_transform) = player_query.single() else {
+        return;
+    };
+    if let Ok(mut camera_transform) = camera_query.single_mut() {
+        camera_transform.look_at(player_transform.translation, Vec3::Y);
+    }
 }
 
 pub fn camera_look(

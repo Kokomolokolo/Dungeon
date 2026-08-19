@@ -24,7 +24,6 @@ fn setup_test_world(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ));
                 index += 1;
             }
-            println!("lksadlökd")
         },
         Err(err) => eprintln!("Error: {}", err)
     }

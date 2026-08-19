@@ -43,4 +43,5 @@ fn setup(mut commands: Commands) {
         },
         Transform::from_xyz(10., 10., 10.).looking_at(Vec3::ZERO, Vec3::Y)
     ));
+    commands.insert_resource(ClearColor(Color::BLACK));
 }
