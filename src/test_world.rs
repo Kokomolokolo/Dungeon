@@ -20,7 +20,7 @@ fn setup_test_world(mut commands: Commands, asset_server: Res<AssetServer>) {
                     WorldAssetRoot(asset_server.load(
                         GltfAssetLabel::Scene(0).from_asset(format!("models/{file}"))
                     )),
-                    Transform::from_xyz(2. * index as f32, 0.0, 0.0)
+                    Transform::from_xyz(2. * index as f32, 0.0, 10.0)
                 ));
                 index += 1;
             }

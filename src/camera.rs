@@ -2,6 +2,8 @@ use bevy::prelude::*;
 use bevy::input::mouse::MouseMotion;
 use bevy::window::{CursorGrabMode, CursorOptions, PrimaryWindow};
 
+use crate::player::Player;
+
 pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
@@ -41,7 +43,7 @@ pub fn setup_camera(
 
     commands.spawn((
         Camera3d::default(),
-        Transform::from_xyz(-10.0, 0.0, 8.0).looking_at(Vec3::ZERO, Vec3::Y),
+        Transform::from_xyz(4.0, 12.0, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
         FpsCamera::default(),
     ));
 }
@@ -77,16 +79,16 @@ pub fn camera_movement(
         let forward = transform.forward();
         let right = transform.right();
 
-        if key.pressed(KeyCode::KeyW) {
+        if key.pressed(KeyCode::ArrowUp) {
             velocity += *forward;
         }
-        if key.pressed(KeyCode::KeyS) {
+        if key.pressed(KeyCode::ArrowDown) {
             velocity -= *forward;
         }
-        if key.pressed(KeyCode::KeyA) {
+        if key.pressed(KeyCode::ArrowLeft) {
             velocity -= *right;
         }
-        if key.pressed(KeyCode::KeyD) {
+        if key.pressed(KeyCode::ArrowRight) {
             velocity += *right;
         }
 
@@ -96,9 +98,17 @@ pub fn camera_movement(
         if key.pressed(KeyCode::ShiftLeft) {
             velocity.y -= 1.0;
         }
+        if key.pressed(KeyCode::KeyT) {
+            println!("{:?}", transform);
+        }
 
         transform.translation += velocity.normalize_or_zero() * fps_cam.speed * time.delta_secs();
     }
+}
+
+pub fn camera_focus_player(mut camera_query: Query<&mut Transform, With<FpsCamera>>, player_query: Query<&Transform, With<Player>>) {
+    // TODO
+    // Hier immer das looking at der Kamera auf den Spieler machen und ihn verfolgen
 }
 
 pub fn camera_look(
