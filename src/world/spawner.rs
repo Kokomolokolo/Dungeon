@@ -48,12 +48,12 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
         // Spawn des Spielers
         // Spieler wird weil es einfacher ist hier gespawnt.
         if tile_type == TileType::PlayerSpawn {
-            if let Some(player_handle) = dungeon_assets.assets.get("character-human.glb") {
+            if let Some(player_handle) = dungeon_assets.assets.get("player.glb") {
                 commands.spawn((
                     // Die Hitbox als Parent, und das Model als child
-                    Player,
+                    Player::default(),
                     RigidBody::Dynamic, // Dynamisch, reagiert mit anderen Physik Objekten
-                    Collider::capsule(0.3, 0.3), // Runder collider: radius, höhe an der y achse
+                    Collider::capsule(0.2, 0.3), // Runder collider: radius, höhe an der y achse
                     LockedAxes::ROTATION_LOCKED, // Verhindert, das Spieler umkippt
                     Transform::from_xyz(pos.x as f32 * tile_size, 0.1, pos.y as f32 * tile_size).with_scale(Vec3::splat(scale)),
                 ))

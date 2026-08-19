@@ -108,7 +108,7 @@ pub fn camera_movement(
     }
 }
 
-pub fn camera_focus_player(mut camera_query: Query<&mut Transform, With<FpsCamera>>, player_query: Query<&Transform, (With<Player>, Without<FpsCamera>)>) {
+pub fn camera_focus_player(mut camera_query: Query<&mut Transform, With<FpsCamera>>, player_query: Query<& Transform, (With<Player>, Without<FpsCamera>)>) {
     // Hier immer das looking at der Kamera auf den Spieler machen und ihn verfolgen
     let Ok(player_transform) = player_query.single() else {
         return;
