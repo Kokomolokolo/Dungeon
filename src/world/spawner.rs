@@ -8,7 +8,7 @@ use crate::{assets::DungeonAssets, player::Player, world::parser::{TileType, par
 const MAP: &str = "\
 ##########
 #........#
-#........#
+#.....C..#
 #........#
 #.P..#...#
 #....#...#
@@ -24,6 +24,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
             TileType::Wall => "wall.glb",
             TileType::Floor => "floor.glb",
             TileType::PlayerSpawn => "floor.glb",
+            TileType::Coin => "floor.glb",
         };
 
         let height = if asset_name == "floor.glb" {
@@ -57,7 +58,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                     LockedAxes::ROTATION_LOCKED, // Verhindert, das Spieler umkippt
                     Transform::from_xyz(pos.x as f32 * tile_size, 0.1, pos.y as f32 * tile_size).with_scale(Vec3::splat(scale)),
                 ))
-                .with_children(|parent| {
+                .with_children(|parent| { // Als child damit die Hitbox sowie das Model eigene Transforms haben können
                     parent.spawn((
                         WorldAssetRoot(player_handle.clone()),
                         // Verschieben der Höhe des Models
@@ -65,6 +66,21 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                             .with_scale(Vec3::splat(scale)),
                     ));
                     
+                });
+            }
+        }
+
+        if tile_type == TileType::Coin {
+            if let Some(coin_handle) = dungeon_assets.assets.get("coin.glb") {
+                commands.spawn((
+                    RigidBody::Dynamic,
+                    Collider::capsule(0.2, 0.2),
+                    Transform::from_xyz(pos.x as f32, 0.1, pos.y as f32)
+                ))
+                .with_children(|parent| {
+                    parent.spawn((
+                        WorldAssetRoot(coin_handle.clone())
+                    ));
                 });
             }
         }

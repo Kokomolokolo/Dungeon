@@ -1,12 +1,13 @@
 use avian3d::dynamics::rigid_body::LinearVelocity;
 use bevy::{gizmos::transform_gizmo, prelude::*};
 
-use crate::player::Player;
+use crate::player::{Player, PlayerState};
 
 pub fn player_movement(
     keyboard: Res<ButtonInput<KeyCode>>,
     mut query: Query<(&mut LinearVelocity, &mut Transform), With<Player>>,
-    time: Res<Time>
+    time: Res<Time>,
+    mut player_query: Query<&mut Player>,
 ) {
     const SPEED: f32 = 2.0;
 
@@ -33,8 +34,8 @@ pub fn player_movement(
             transform.rotation = transform.rotation.slerp(target_rotation, 10.0 * time.delta_secs());
             
             direction = direction.normalize();
-        }
-
+        } 
+        
         velocity.x = direction.x * SPEED;
         velocity.z = direction.z * SPEED;
     }

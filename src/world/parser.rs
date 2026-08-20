@@ -7,6 +7,7 @@ pub enum TileType {
     Wall,
     Floor,
     PlayerSpawn, // Wird zu einem Floor, nur um es auf der Map zu notieren
+    Coin,
 }
 
 pub struct MapData {
@@ -27,6 +28,7 @@ pub fn parse_map(aascii_str: &str) -> MapData {
                 '#' => Some(TileType::Wall),
                 '.' => Some(TileType::Floor),
                 'P' => Some(TileType::PlayerSpawn),
+                'C' => Some(TileType::Coin),
                 _ => None,
             };
 

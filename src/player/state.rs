@@ -1,0 +1,33 @@
+use avian3d::dynamics::rigid_body::LinearVelocity;
+use bevy::prelude::*;
+
+use crate::player::{Player, PlayerState};
+
+pub fn update_player_state(
+    query: Query<(&LinearVelocity, &mut Player)>
+) {
+    for (velocity, mut player) in query {
+        // Entscheidet je nachdem was der Spieler gerade macht welche Animation als erstes Ausgeführt werden soll
+        // 
+        // 1. Priorität : Tod
+        // Dann nichts mehr machen
+        if player.state == PlayerState::Die {
+            continue;
+        }
+
+        // Attakiert der Spieler? Todo...
+        // Bewegt sich der Spieler?
+        let is_moving = velocity.length_squared() > 0.1;
+
+        let new_state = if is_moving {
+            PlayerState::Walking
+        } else {
+            PlayerState::Idle
+        };
+        
+        // Wichtig: Nur ändern wenn auch geändert werden muss
+        if new_state != player.state {
+            player.state = new_state;
+        }
+    }
+}

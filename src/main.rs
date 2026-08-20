@@ -21,10 +21,11 @@ pub enum AppState {
     InGame,
 }
 
+
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, PhysicsPlugins::default()))
-        .add_plugins(PhysicsDebugPlugin::default())
+        //.add_plugins(PhysicsDebugPlugin::default())
         .init_state::<AppState>()
         .add_plugins((WorldPlugin, CameraPlugin, AssetPlugin, PlayerPlugin, TestWorldPlugin))
         .add_systems(Startup, setup)
