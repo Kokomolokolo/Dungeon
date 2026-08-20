@@ -3,6 +3,7 @@ use bevy::prelude::*;
 
 use crate::player::{Player, PlayerState};
 
+// Nicht Alle state änderungen finden hier statt. Nur die Rückfälle von anderen States die priorisieren
 pub fn update_player_state(
     query: Query<(&LinearVelocity, &mut Player)>
 ) {
@@ -15,7 +16,11 @@ pub fn update_player_state(
             continue;
         }
 
-        // Attakiert der Spieler? Todo...
+        // Attakiert der Spieler
+        if player.state == PlayerState::Attack {
+            continue;
+        }
+        
         // Bewegt sich der Spieler?
         let is_moving = velocity.length_squared() > 0.1;
 

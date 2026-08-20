@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::assets::DungeonAssets;
+use crate::{assets::DungeonAssets, player::Player};
 
 pub fn attach_weapon_player(
     mut commands: Commands,
@@ -31,6 +31,18 @@ pub fn attach_weapon_player(
                     panic!()
                 }
             }
+        }
+    }
+}
+
+pub fn player_attack(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mouse: Res<ButtonInput<MouseButton>>,
+    mut query: Query<&mut Player>
+) {
+    for mut player in query {
+        if keyboard.just_pressed(KeyCode::Space) || mouse.just_pressed(MouseButton::Left) {
+            player.state = super::PlayerState::Attack
         }
     }
 }

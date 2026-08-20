@@ -19,10 +19,11 @@ impl Plugin for PlayerAnimationPlugin {
 
 fn setup_animation(mut commands: Commands, dungeon_assets: Res<DungeonAssets>, asset_server: Res<AssetServer>, mut graphs: ResMut<Assets<AnimationGraph>>) {
     // Animationen laden
+    // TODO: Hier nicht mit asset server da die eigentlich bereits in dungeon assets sein müssten oder sie da wenigstes rein machen
     let static_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(0).from_asset("models/player.glb"));
     let idle_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(1).from_asset("models/player.glb"));
     let walk_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(2).from_asset("models/player.glb"));
-    let attack_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(20).from_asset("models/player.glb"));
+    let attack_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(19).from_asset("models/player.glb"));
     let die_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(10).from_asset("models/player.glb"));
 
 
