@@ -61,7 +61,8 @@ fn setup_menu(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
             flex_direction: FlexDirection::Column,
             align_items: AlignItems::Center,
             justify_content: JustifyContent::Center,
-            column_gap: px(15),
+            column_gap: px(30),
+            row_gap: px(30)
         }
         BackgroundColor(Color::srgb(0.1, 0.1, 0.15))
 

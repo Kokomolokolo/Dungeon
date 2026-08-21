@@ -3,7 +3,7 @@ use avian3d::{collision::collider::Collider, dynamics::rigid_body::{LockedAxes, 
 // 
 use bevy::prelude::*;
 
-use crate::{assets::DungeonAssets, enemy::{Enemy, EnemyState, EnemyStats}, player::Player, world::parser::{TileType, parse_map}};
+use crate::{assets::DungeonAssets, combat::Health, enemy::{Enemy, EnemyState, EnemyStats}, player::Player, world::parser::{TileType, parse_map}};
 
 const MAP: &str = "\
 ##########
@@ -69,6 +69,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                 commands.spawn((
                     // Die Hitbox als Parent, und das Model als child
                     Player::default(),
+                    Health::new(100.),
                     RigidBody::Dynamic, // Dynamisch, reagiert mit anderen Physik Objekten
                     Collider::capsule(0.2, 0.3), // Runder collider: radius, höhe an der y achse
                     LockedAxes::ROTATION_LOCKED, // Verhindert, das Spieler umkippt
@@ -90,6 +91,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
             if let Some(orc_handle) = dungeon_assets.assets.get("orc.glb") {
                 commands.spawn((
                     Enemy,
+                    Health::new(50.),
                     EnemyState::Idle,
                     EnemyStats::default(),
                     RigidBody::Dynamic, // Dynamisch, reagiert mit anderen Physik Objekten
