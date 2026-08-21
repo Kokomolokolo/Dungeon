@@ -9,14 +9,14 @@ pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_camera);
+        app.add_systems(OnEnter(AppState::InGame), setup_camera);
         app.add_systems(Update, (
             camera_look, 
             camera_movement, 
             lock_cursor_on_click,
             unlock_cursor_esc,
-            camera_focus_player.run_if(in_state(AppState::InGame))
-        ));
+            camera_focus_player
+        ).run_if(in_state(AppState::InGame)));
     }
 }
 

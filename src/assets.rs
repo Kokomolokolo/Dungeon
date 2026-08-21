@@ -40,13 +40,12 @@ fn load_models(
             }
             commands.insert_resource(DungeonAssets {assets});
             println!("Finished loading, going ingame lols :^)");
-            next_state.set(AppState::InGame);
+            next_state.set(AppState::Menu);
         },
         Err(err) => {
             // Thrown an error files nicht gefunden
             eprintln!("Error: Assets not found/couldnt be loaded. {} \n assets.rs", err);
             panic!()
         }
-        
     }
 }

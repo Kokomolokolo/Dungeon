@@ -116,9 +116,9 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                     Transform::from_xyz(pos.x as f32, 0.1, pos.y as f32)
                 ))
                 .with_children(|parent| {
-                    parent.spawn((
+                    parent.spawn(
                         WorldAssetRoot(coin_handle.clone())
-                    ));
+                    );
                 });
             }
         }

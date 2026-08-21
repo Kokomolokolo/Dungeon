@@ -6,8 +6,7 @@ use crate::{enemy::{Enemy, EnemyState, EnemyStats}, player::Player};
 
 pub fn enemy_ai(
     player_query: Query<&Transform, With<Player>>,
-    mut enemy_query: Query<(&Transform, &EnemyStats, &mut EnemyState, &mut LinearVelocity), With<Enemy>>,
-    time: Res<Time>
+    enemy_query: Query<(&Transform, &EnemyStats, &mut EnemyState, &mut LinearVelocity), With<Enemy>>,
 ) {
     let Ok(player_transform) = player_query.single() else {
         return;

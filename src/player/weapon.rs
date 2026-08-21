@@ -38,7 +38,7 @@ pub fn attach_weapon_player(
 pub fn player_attack(
     keyboard: Res<ButtonInput<KeyCode>>,
     mouse: Res<ButtonInput<MouseButton>>,
-    mut query: Query<&mut Player>
+    query: Query<&mut Player>
 ) {
     for mut player in query {
         if keyboard.just_pressed(KeyCode::Space) || mouse.just_pressed(MouseButton::Left) {

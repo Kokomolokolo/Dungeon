@@ -1,7 +1,7 @@
 use avian3d::dynamics::rigid_body::LinearVelocity;
-use bevy::{prelude::*, render::render_resource::CachedPipelineState::Ok};
+use bevy::{prelude::*};
 
-use crate::player::{Player, PlayerAnimations, PlayerState::{self, Attack}};
+use crate::player::{Player, PlayerAnimations, PlayerState::{self}};
 
 // Nicht Alle state änderungen finden hier statt. Nur die Rückfälle von anderen States die priorisieren
 pub fn update_player_state(
