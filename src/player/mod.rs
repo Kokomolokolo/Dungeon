@@ -48,7 +48,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         //app.add_systems(Update, debug_print_names);
         app.add_systems(Update, attach_weapon_player);
-        app.add_systems(Update, (player_attack, player_movement, update_player_state).chain().run_if(in_state(AppState::InGame)));
+        app.add_systems(Update, (player_attack, player_movement, check_attack_finished, update_player_state).chain().run_if(in_state(AppState::InGame)));
         app.add_plugins(PlayerAnimationPlugin);
     }
 }

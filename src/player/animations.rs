@@ -78,9 +78,15 @@ fn animate_player(
                 _ => animations.idle,
             };
 
-            transitions
-                .play(&mut anim_player, target_node, std::time::Duration::from_secs_f32(0.2))
-                .repeat();
+            // Kein Repeat bei der Attack Animation
+            if player.state == PlayerState::Attack {
+                transitions
+                    .play(&mut anim_player, target_node, std::time::Duration::from_secs_f32(0.2));
+            } else  {
+                transitions
+                    .play(&mut anim_player, target_node, std::time::Duration::from_secs_f32(0.2))
+                    .repeat();
+            }
         }
     }
 }

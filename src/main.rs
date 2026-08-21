@@ -6,6 +6,7 @@ use crate::test_world::TestWorldPlugin;
 use crate::camera::CameraPlugin;
 use crate::assets::AssetPlugin;
 use crate::world::WorldPlugin;
+use crate::enemy::EnemyPlugin;
 
 
 mod test_world;
@@ -13,6 +14,7 @@ mod camera;
 mod world;
 mod assets;
 mod player;
+mod enemy;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
 pub enum AppState {
@@ -27,7 +29,7 @@ fn main() {
         .add_plugins((DefaultPlugins, PhysicsPlugins::default()))
         //.add_plugins(PhysicsDebugPlugin::default())
         .init_state::<AppState>()
-        .add_plugins((WorldPlugin, CameraPlugin, AssetPlugin, PlayerPlugin, TestWorldPlugin))
+        .add_plugins((WorldPlugin, CameraPlugin, AssetPlugin, PlayerPlugin, TestWorldPlugin, EnemyPlugin))
         .add_systems(Startup, setup)
         .run();
 }

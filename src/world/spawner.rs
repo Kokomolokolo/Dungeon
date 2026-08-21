@@ -3,16 +3,31 @@ use avian3d::{collision::collider::Collider, dynamics::rigid_body::{LockedAxes, 
 // 
 use bevy::prelude::*;
 
-use crate::{assets::DungeonAssets, player::Player, world::parser::{TileType, parse_map}};
+use crate::{assets::DungeonAssets, enemy::{Enemy, EnemyState, EnemyStats}, player::Player, world::parser::{TileType, parse_map}};
 
 const MAP: &str = "\
 ##########
-#........#
+#.E......#
 #.....C..#
 #........#
 #.P..#...#
 #....#...#
 ##########";
+
+const MAP_LARGE: &str = "\
+#######################
+#P..#.....C...#.......#
+#...#...#####.#.#####.#
+#.......#...#.#.#...#.#
+#####.###.#.#.#.#.#.#.#
+#.........#...#...#...#
+#.#######.#########.###
+#.#.....#.#.......#...#
+#.#.C...#.#.C.E.C.#.E.#
+#.#.....#.#.......#...#
+#.#######.#############
+#.......E.............#
+#######################";
 
 pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
     let map_data = parse_map(MAP);
@@ -25,6 +40,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
             TileType::Floor => "floor.glb",
             TileType::PlayerSpawn => "floor.glb",
             TileType::Coin => "floor.glb",
+            _ => "floor.glb"
         };
 
         let height = if asset_name == "floor.glb" {
@@ -69,7 +85,29 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                 });
             }
         }
-
+        // Gegner am Anfang Spawnen
+        if tile_type == TileType::EnemySpawn {
+            if let Some(orc_handle) = dungeon_assets.assets.get("orc.glb") {
+                commands.spawn((
+                    Enemy,
+                    EnemyState::Idle,
+                    EnemyStats::default(),
+                    RigidBody::Dynamic, // Dynamisch, reagiert mit anderen Physik Objekten
+                    Collider::capsule(0.2, 0.3), // Runder collider: radius, höhe an der y achse
+                    LockedAxes::ROTATION_LOCKED, // Verhindert, das Spieler umkippt
+                    Transform::from_xyz(pos.x as f32 * tile_size, 0.1, pos.y as f32 * tile_size).with_scale(Vec3::splat(scale)),  
+                ))
+                .with_children(|parent| {
+                    parent.spawn((
+                        WorldAssetRoot(orc_handle.clone()),
+                        Transform::from_xyz(0.0, -0.4, 0.0)
+                            .with_scale(Vec3::splat(scale)),
+                    ));
+                });
+            }
+        }
+        
+        // Coins Spawnen
         if tile_type == TileType::Coin {
             if let Some(coin_handle) = dungeon_assets.assets.get("coin.glb") {
                 commands.spawn((

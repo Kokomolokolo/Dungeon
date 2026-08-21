@@ -1,7 +1,7 @@
 use avian3d::dynamics::rigid_body::LinearVelocity;
-use bevy::prelude::*;
+use bevy::{prelude::*, render::render_resource::CachedPipelineState::Ok};
 
-use crate::player::{Player, PlayerState};
+use crate::player::{Player, PlayerAnimations, PlayerState::{self, Attack}};
 
 // Nicht Alle state änderungen finden hier statt. Nur die Rückfälle von anderen States die priorisieren
 pub fn update_player_state(
@@ -33,6 +33,24 @@ pub fn update_player_state(
         // Wichtig: Nur ändern wenn auch geändert werden muss
         if new_state != player.state {
             player.state = new_state;
+        }
+    }
+}
+
+pub fn check_attack_finished(
+    player_query: Query<&mut Player>,
+    anim_query: Query<&AnimationPlayer>,
+    animations: Res<PlayerAnimations>,
+) {
+    for mut player in player_query {
+        if player.state == PlayerState::Attack {
+            for anim_player in anim_query {
+                if let Some(active_anim) = anim_player.animation(animations.attack) {
+                    if active_anim.is_finished() {
+                        player.state = PlayerState::Idle;
+                    }
+                }
+            }
         }
     }
 }
