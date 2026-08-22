@@ -33,8 +33,8 @@ fn main() {
         .add_plugins((DefaultPlugins, PhysicsPlugins::default()))
         .add_plugins(PhysicsDebugPlugin::default())
         .init_state::<AppState>()
+        .add_systems(OnEnter(AppState::InGame), setup)
         .add_plugins((MenuPlugin, WorldPlugin, CameraPlugin, AssetPlugin, PlayerPlugin, TestWorldPlugin, EnemyPlugin, CombatPlugin))
-        .add_systems(Startup, setup)
         .run();
 }
 
@@ -44,11 +44,11 @@ fn setup(mut commands: Commands) {
     //    Transform::from_xyz(0., 0. , 10.).looking_at(Vec3::ZERO, Vec3::Y)
     //));
     commands.spawn((
-        DirectionalLight {
-            shadow_maps_enabled: true,
+        AmbientLight {
+            brightness: 0.5, 
+            affects_lightmapped_meshes: false,
             ..default()
         },
-        Transform::from_xyz(10., 10., 10.).looking_at(Vec3::ZERO, Vec3::Y)
     ));
     commands.insert_resource(ClearColor(Color::BLACK));
 }

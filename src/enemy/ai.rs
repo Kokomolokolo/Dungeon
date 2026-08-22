@@ -12,6 +12,9 @@ pub fn enemy_ai(
         return;
     };
     for ( enemy_trans, stats_enemy, mut state_enemy, mut velocity_enemy) in enemy_query {
+        if *state_enemy == EnemyState::Die {
+            return;
+        }
         let distance = enemy_trans.translation.distance(player_transform.translation);
 
         if distance <= stats_enemy.attack_radius {
@@ -40,6 +43,14 @@ pub fn rotate_enemy(enemy_query: Query<(&mut Transform, &LinearVelocity), With<E
             let target_angle = velocity.x.atan2(velocity.z);
             let target_rotation = Quat::from_rotation_y(target_angle);
             enemy_trans.rotation = enemy_trans.rotation.slerp(target_rotation, 10.0 * time.delta_secs())
+        }
+    }
+}
+
+pub fn die_enemy(mut enemy_query: Query<(&mut LinearVelocity, &EnemyState), With<Enemy>>) {
+    for (mut velocity, state) in enemy_query {
+        if *state == EnemyState::Die {
+            velocity.y = 10.;
         }
     }
 }

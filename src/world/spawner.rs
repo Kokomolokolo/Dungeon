@@ -1,7 +1,10 @@
+use std::f32;
+
 use avian3d::{collision::collider::Collider, dynamics::rigid_body::{LockedAxes, RigidBody}};
 // Spawnt die Teile der Map
 // 
 use bevy::prelude::*;
+use bevy::light::NotShadowCaster;
 
 use crate::{assets::DungeonAssets, combat::Health, enemy::{Enemy, EnemyState, EnemyStats}, player::Player, world::parser::{TileType, parse_map}};
 
@@ -53,7 +56,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
             // Das Asset wurde gefunden
             commands.spawn((
                 WorldAssetRoot(asset.clone()),
-                Transform::from_xyz(pos.x as f32 * tile_size, 0.0, pos.y as f32 * tile_size).with_scale(Vec3::splat(scale)),
+                Transform::from_xyz(pos.x as f32 * tile_size, 0.0, pos.y as f32 * tile_size).with_scale(Vec3::splat(1.01)),
 
                 // Für die Kollision
                 // static riget body mit einem Collider mit der Größe des Würfels
@@ -74,6 +77,7 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                     Collider::capsule(0.2, 0.3), // Runder collider: radius, höhe an der y achse
                     LockedAxes::ROTATION_LOCKED, // Verhindert, das Spieler umkippt
                     Transform::from_xyz(pos.x as f32 * tile_size, 0.1, pos.y as f32 * tile_size).with_scale(Vec3::splat(scale)),
+                    NotShadowCaster
                 ))
                 .with_children(|parent| { // Als child damit die Hitbox sowie das Model eigene Transforms haben können
                     parent.spawn((
@@ -81,6 +85,19 @@ pub fn spawn_map(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
                         // Verschieben der Höhe des Models
                         Transform::from_xyz(0.0, -0.4, 0.0)
                             .with_scale(Vec3::splat(scale)),
+                        NotShadowCaster
+                    ));
+                    // Das Licht als Child des Spielers
+                    parent.spawn((
+                        PointLight {
+                            intensity: 500_00.0,
+                            range: 20.0,
+                            radius: 0.1,
+                            shadow_maps_enabled: true,
+                            color: Color::srgb(1.0, 0.85, 0.6), // warmes Fackellicht
+                            ..default()
+                        },
+                        Transform::from_xyz(0.0, 0.3, 0.5),
                     ));
                     
                 });

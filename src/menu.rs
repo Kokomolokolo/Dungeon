@@ -50,9 +50,8 @@ fn menu_button(label: &'static str) -> impl Scene { // lifetime wegen dem child 
 }
 
 fn setup_menu(mut commands: Commands, dungeon_assets: Res<DungeonAssets>) {
-    commands.spawn(Camera2d);
-
     commands.spawn_scene(bsn! {
+        Camera2d
         MenuUI
         Node {
             position_type: PositionType::Absolute,

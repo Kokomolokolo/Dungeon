@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy::input::mouse::MouseMotion;
 use bevy::window::{CursorGrabMode, CursorOptions, PrimaryWindow};
 
-use crate::AppState;
+use crate::{AppState};
 use crate::player::Player;
 
 pub struct CameraPlugin;
@@ -11,11 +11,13 @@ impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(AppState::InGame), setup_camera);
         app.add_systems(Update, (
-            camera_look, 
-            camera_movement, 
+            //camera_look, 
+            //camera_movement, 
             lock_cursor_on_click,
             unlock_cursor_esc,
-            camera_focus_player
+            camera_follow_player,
+            //light_follow_player,
+            camera_focus_player,
         ).run_if(in_state(AppState::InGame)));
     }
 }
@@ -65,6 +67,9 @@ fn unlock_cursor_esc(
     mut cursor_options: Single<&mut CursorOptions, With<PrimaryWindow>>,
 ) {
     if keys.just_pressed(KeyCode::Escape) {
+        if cursor_options.grab_mode == CursorGrabMode::None {
+            std::process::exit(1);
+        }
         cursor_options.grab_mode = CursorGrabMode::None;
         cursor_options.visible = true;
     }
@@ -115,6 +120,19 @@ pub fn camera_focus_player(mut camera_query: Query<&mut Transform, With<FpsCamer
     };
     if let Ok(mut camera_transform) = camera_query.single_mut() {
         camera_transform.look_at(player_transform.translation, Vec3::Y);
+    }
+}
+
+pub fn camera_follow_player(
+    mut camera_query: Query<&mut Transform, With<FpsCamera>>,
+    player_query: Query<& Transform, (With<Player>, Without<FpsCamera>)>
+) {
+    let Ok(player_transform) = player_query.single() else {
+        return;
+    };
+
+    if let Ok(mut camaera_transform) = camera_query.single_mut() {
+        camaera_transform.translation = player_transform.translation + Vec3::new(0.0, 5., 2.);
     }
 }
 

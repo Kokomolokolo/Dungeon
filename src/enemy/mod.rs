@@ -4,6 +4,8 @@ mod ai;
 
 use ai::*;
 
+use crate::AppState;
+
 #[derive(Component)]
 pub struct Enemy;
 
@@ -12,6 +14,7 @@ pub enum EnemyState {
     Idle,
     Chasing,
     Attacking,
+    Die
 }  
 
 #[derive(Component)]
@@ -35,6 +38,6 @@ pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (enemy_ai, rotate_enemy));
+        app.add_systems(Update, (enemy_ai, rotate_enemy, die_enemy).run_if(in_state(AppState::InGame)));
     }
 }

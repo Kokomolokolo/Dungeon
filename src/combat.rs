@@ -1,7 +1,7 @@
 use bevy::{prelude::*};
 use avian3d::prelude::*;
 
-use crate::{AppState, enemy::Enemy, player::{Player, PlayerState}};
+use crate::{AppState, enemy::{Enemy, EnemyState}, player::{Player, PlayerState}};
 // Idee: Komplett weg gekuppelt
 // Jedes Entity was schaden bekommen kann bekommt ein health, 
 // und immer wenn einem entity damage bekommt dann wird das über damage events gemacht.
@@ -47,14 +47,15 @@ pub fn check_player_attack_hits(
     keyboard: Res<ButtonInput<KeyCode>>,
     mouse: Res<ButtonInput<MouseButton>>,
 ) {
-    let Ok((player_entiy, player_transform, player)) = player_query.single() else { return;};
+    let Ok((player_entiy, player_transform, player)) = player_query.single() else { return; };
 
     // Wenn der Spieler nicht gerade angreift
     if keyboard.just_pressed(KeyCode::Space) || mouse.just_pressed(MouseButton::Left) {
-        
+        // es ist zu spät wie macht man das
     } else {
         return;
     }
+    
     // Größe der Trefferzone
     let size = Vec3::new(1.2, 1.0, 1.5); // Breite, Höhe, Tiefe
     let attack_shape = Collider::cuboid(1.2, 1.1, 1.5);
@@ -84,14 +85,27 @@ pub fn check_player_attack_hits(
     }
 }
 
-fn apply_damage(mut commands: Commands, mut damage_message: MessageReader<DamageMessage>, mut health_query: Query<(Entity, &mut Health)>) {
+fn apply_damage(
+    mut commands: Commands, 
+    mut damage_message: MessageReader<DamageMessage>, 
+    mut health_query: Query<(Entity, &mut Health)>, 
+    mut orc_query: Query<(Entity, &mut EnemyState)>,
+) {
     for message in damage_message.read() {
         if let Ok((entity, mut health)) = health_query.get_mut(message.target) {
             health.current -= message.amount;
             println!("Entität {:?} hat noch {:.1} HP", entity, health.current);
 
             if health.current <= 0.0 {
-                commands.entity(entity).despawn();
+                // Check ob das getötete ein Orc ist
+                // Andere entites despawnen, orc haben eine animation
+                if let Ok((eneity_orc, mut state)) = orc_query.get_mut(entity) {
+                    if eneity_orc == entity {
+                        *state = EnemyState::Die;
+                    } else {
+                        commands.entity(entity).despawn();
+                    }
+                }
             }
         }
     }

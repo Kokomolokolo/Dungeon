@@ -27,7 +27,6 @@ fn setup_animation(mut commands: Commands, dungeon_assets: Res<DungeonAssets>, a
     let die_clip: Handle<AnimationClip> = asset_server.load(GltfAssetLabel::Animation(10).from_asset("models/player.glb"));
 
 
-    println!("{:?}", walk_clip);
     // Animationsgrapgen
     let mut graph = AnimationGraph::new();
     let static_node = graph.add_clip(static_clip, 1.0, graph.root);
